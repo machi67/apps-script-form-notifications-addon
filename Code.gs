@@ -263,7 +263,7 @@ function sendCreatorNotification() {
 }
 
 /**
- * Sends out respondent notificiation emails.
+ * Sends out respondent notification emails.
  *
  * @param {FormResponse} response FormResponse object of the event
  *      that triggered this notification
@@ -275,17 +275,29 @@ function sendRespondentNotification(response) {
   var emailItem = form.getItemById(parseInt(emailId));
   var respondentEmail = response.getResponseForItem(emailItem)
       .getResponse();
-  if (respondentEmail) {
+   
+  if (respondentEmail) {    
+  var itmResponses = response.getItemResponses();
+  var textResponse ='';
+  for (var i = 0; i < itmResponses.length; i++) {
+    var itmResponse = itmResponses[i];
+    textResponse += itmResponse.getItem().getTitle() + ': ' +
+        itmResponse.getResponse() + '\n'
+  }
+    
     var template =
-        HtmlService.createTemplateFromFile('RespondentNotification');
-    template.paragraphs = settings.getProperty('responseText').split('\n');
+        HtmlService.createTemplateFromFile('RespondentNotification');    
+    template.paragraphs = (settings.getProperty('responseText') + '\n' +
+                          textResponse).split('\n');
     template.notice = NOTICE;
     var message = template.evaluate();
+    
     MailApp.sendEmail(respondentEmail,
         settings.getProperty('responseSubject'),
         message.getContent(), {
           name: form.getTitle(),
-            htmlBody: message.getContent()
+          htmlBody: message.getContent(),
+          replyTo: settings.getProperty('replytoEmail')
         });
   }
 }
