@@ -40,6 +40,7 @@ label {
 #creator-email,
 #respondent-email,
 #button-bar,
+#replyTo-email,
 #submit-subject {
   margin-bottom: 10px;
 }
@@ -75,6 +76,12 @@ label {
         Which question asks for their email?
       </label>
       <select class="width-100" id="respondent-email"></select>
+      
+      <label for="replyTo-email">
+        ReplyTo email:
+      </label>
+      <input type="text" class="width-100" id="replyTo-email">
+
       <label for="submit-subject">
         Notification email subject:
       </label>
@@ -125,6 +132,7 @@ label {
     $('#creator-email').val(settings.creatorEmail);
     $('#response-step').val(!settings.responseStep ?
        10 : settings.responseStep);
+    $('#replyTo-email').val(settings.replytoEmail);
     $('#submit-subject').val(!settings.responseSubject ?
        'Thank you for filling out our form!' :
        settings.responseSubject);
@@ -223,6 +231,7 @@ label {
     // Only save respondent options if notify is turned on
     if (respondentNotify) {
       settings.respondentEmailItemId = $('#respondent-email').val();
+      settings.replytoEmail = $('#replyTo-email').val();
       settings.responseSubject = $('#submit-subject').val();
       settings.responseText = $('#submit-notice').val();
     }
